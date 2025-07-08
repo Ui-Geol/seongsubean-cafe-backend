@@ -105,6 +105,17 @@ public class CafeServiceImpl implements CafeService {
 
 
 
+//  @Transactional
+//  @Override
+//  public CafeResponse updateCafe(Long cafeId, CafeEntity requestEntity) {
+//    CafeEntity cafe = cafeRepository.findById(cafeId)
+//        .orElseThrow(() -> new RuntimeException("해당 카페가 존재하지 않습니다."));
+//
+//    modelMapper.map(requestEntity, cafe);
+//    CafeEntity updated = cafeRepository.save(cafe);
+//    return modelMapper.map(updated, CafeResponse.class);
+//  }
+//=> 이렇게 쓸 수도 있음
 
 
 
