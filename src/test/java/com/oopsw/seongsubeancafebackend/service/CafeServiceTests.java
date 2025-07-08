@@ -1,6 +1,11 @@
 package com.oopsw.seongsubeancafebackend.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import com.oopsw.seongsubeancafebackend.dto.CafeDTO;
+import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -40,6 +45,34 @@ public class CafeServiceTests {
 
     Assertions.assertThat(cafeId).isEqualTo(1L);
 
+  }
+
+  @Test
+  @Order(2)
+  public void successGetCafeTest() {
+
+    CafeDTO resultCafeDTO = cafeService.getCafe(1L);
+
+    assertAll(
+        () -> assertThat(resultCafeDTO.getEmail()).isEqualTo("owner@bluemoon.com"),
+        () -> assertThat(resultCafeDTO.getCafeName()).isEqualTo("블루문 카페"),
+        () -> assertThat(resultCafeDTO.getZipCode()).isEqualTo("06292"),
+        () -> assertThat(resultCafeDTO.getCafeAddress()).isEqualTo("서울특별시 강남구 테헤란로 152"),
+        () -> assertThat(resultCafeDTO.getCafeDetailAddress()).isEqualTo("3층 301호"),
+        () -> assertThat(resultCafeDTO.getCafeIntroduction()).isEqualTo(
+            "조용하고 아늑한 분위기에서 신선한 원두로 내린 커피를 즐길 수 있는 카페입니다. 무료 와이파이와 콘센트가 구비되어 있어 업무나 스터디하기에도 좋습니다."),
+        () -> assertThat(resultCafeDTO.getPhoneNumber()).isEqualTo("02-1234-5678"),
+        () -> assertThat(resultCafeDTO.getImage()).isEqualTo("/images/cafes/bluemoon-cafe.jpg"),
+        () -> assertThat(resultCafeDTO.getIsBusinessDay()).isTrue()
+    );
+  }
+
+  @Test
+  @Order(3)
+  public void failGetCafeTest() {
+
+    assertThatThrownBy(() -> cafeService.getCafe(8L))
+        .isInstanceOf(NoSuchElementException.class);
   }
 
 
