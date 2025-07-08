@@ -50,8 +50,8 @@ public class CafeEntity {
   @Column(name = "IMAGE", nullable = false, length = 200)
   private String image;
 
-  @Column(name = "STATUS", nullable = false)
-  private Boolean status = true;
+  @Column(name = "IS_BUSINESS_DAY", nullable = false)
+  private Boolean isBusinessDay = true;
 
   @Column(name = "CREATED_AT", nullable = false, updatable = false)
   private LocalDateTime createdAt;
@@ -63,7 +63,7 @@ public class CafeEntity {
   protected void onCreate() {
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
-    this.status = true;
+    this.isBusinessDay = true;
   }
 
   @PreUpdate

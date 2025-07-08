@@ -3,6 +3,7 @@ package com.oopsw.seongsubeancafebackend.service;
 import com.oopsw.seongsubeancafebackend.dto.CafeDTO;
 import com.oopsw.seongsubeancafebackend.jpa.CafeEntity;
 import com.oopsw.seongsubeancafebackend.jpa.CafeRepository;
+import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,16 @@ public class cafeServiceImpl implements CafeService {
   @Autowired
   public cafeServiceImpl(CafeRepository cafeRepository) {
     this.cafeRepository = cafeRepository;
+  }
+
+  @Override
+  public CafeDTO getCafe(Long cafeId) {
+
+    Optional<CafeEntity> resultCafeEntity = cafeRepository.findById(cafeId);
+
+    CafeDTO resultCafeDTO = new ModelMapper().map(resultCafeEntity.get(), CafeDTO.class);
+
+    return resultCafeDTO;
   }
 
   @Override

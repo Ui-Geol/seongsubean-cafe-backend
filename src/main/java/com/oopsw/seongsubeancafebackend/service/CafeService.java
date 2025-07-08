@@ -7,4 +7,6 @@ public interface CafeService {
 
   Long createCafe(CafeDTO cafeDTO);
 
+  CafeDTO getCafe(Long cafeId);
+
 }

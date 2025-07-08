@@ -1,15 +1,9 @@
-package com.oopsw.seongsubeancafebackend.dto;
+package com.oopsw.seongsubeancafebackend.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class CafeDTO {
+public class ResponseCafe {
 
   private Long cafeId;
   private String email;
@@ -20,6 +14,5 @@ public class CafeDTO {
   private String phoneNumber;
   private String cafeIntroduction;
   private String image;
-  private Boolean isBusinessDay;
 
 }
