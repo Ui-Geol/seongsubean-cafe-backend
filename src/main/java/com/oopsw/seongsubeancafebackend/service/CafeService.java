@@ -9,4 +9,6 @@ public interface CafeService {
 
   CafeDTO getCafe(Long cafeId);
 
+  Long updateCafe(CafeDTO cafeDTO);
+
 }

@@ -4,6 +4,7 @@ import com.oopsw.seongsubeancafebackend.dto.CafeDTO;
 import com.oopsw.seongsubeancafebackend.service.CafeService;
 import com.oopsw.seongsubeancafebackend.vo.RequestCafe;
 import com.oopsw.seongsubeancafebackend.vo.ResponseCafe;
+import jakarta.validation.Valid;
 import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,8 +35,14 @@ public class CafeController {
     return ResponseEntity.ok(Map.of("message", "ok"));
   }
 
+  @PostMapping("test")
+  public ResponseEntity<String> testCafe(@Valid @RequestBody RequestCafe requestCafe) {
+
+    return ResponseEntity.ok("ok");
+  }
+
   @PostMapping
-  public ResponseEntity<Map<String, Long>> createCafe(@RequestBody RequestCafe requestCafe) {
+  public ResponseEntity<Map<String, Long>> createCafe(@Valid @RequestBody RequestCafe requestCafe) {
 
     CafeDTO cafeDTO = new ModelMapper().map(requestCafe, CafeDTO.class);
 
@@ -52,6 +60,19 @@ public class CafeController {
 
     return ResponseEntity.status(HttpStatus.OK).body(responseCafe);
 
+  }
+
+  @PutMapping("/{cafeId}")
+  public ResponseEntity<Map<String, Long>> updateCafe(@PathVariable Long cafeId,
+      @Valid @RequestBody RequestCafe requestCafe) {
+
+    requestCafe.setCafeId(cafeId);
+
+    CafeDTO cafeDTO = new ModelMapper().map(requestCafe, CafeDTO.class);
+
+    Long ResultCafeId = cafeService.updateCafe(cafeDTO);
+
+    return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", ResultCafeId));
   }
 
 

@@ -14,5 +14,6 @@ public class ResponseCafe {
   private String phoneNumber;
   private String cafeIntroduction;
   private String image;
+  private Boolean isBusinessDay;
 
 }

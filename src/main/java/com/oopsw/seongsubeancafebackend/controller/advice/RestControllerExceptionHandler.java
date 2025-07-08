@@ -1,5 +1,8 @@
 package com.oopsw.seongsubeancafebackend.controller.advice;
 
+import com.oopsw.seongsubeancafebackend.exception.CafeNotFoundException;
+import com.oopsw.seongsubeancafebackend.exception.CafeUpdateException;
+import com.oopsw.seongsubeancafebackend.exception.InvalidCafeIdException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
@@ -87,6 +90,30 @@ public class RestControllerExceptionHandler {
 //    return buildResponse(request, HttpStatus.INTERNAL_SERVER_ERROR,
 //        "서버 오류: 데이터베이스 처리 중 문제가 발생했습니다.");
 //  }
+
+  @ExceptionHandler(CafeUpdateException.class)
+  public ResponseEntity<CustomErrorResponse> handleDataAccess(CafeUpdateException e,
+      HttpServletRequest request) {
+    log.error("Data access error: {}", e.getMessage(), e);
+    return buildResponse(request, HttpStatus.INTERNAL_SERVER_ERROR,
+        "카페 수정이 실패하였습니다");
+  }
+
+  @ExceptionHandler(CafeNotFoundException.class)
+  public ResponseEntity<CustomErrorResponse> handleDataAccess(CafeNotFoundException e,
+      HttpServletRequest request) {
+    log.error("Data access error: {}", e.getMessage(), e);
+    return buildResponse(request, HttpStatus.INTERNAL_SERVER_ERROR,
+        "카페 조회가 실패하였습니다");
+  }
+
+  @ExceptionHandler(InvalidCafeIdException.class)
+  public ResponseEntity<CustomErrorResponse> handleDataAccess(InvalidCafeIdException e,
+      HttpServletRequest request) {
+    log.error("Data access error: {}", e.getMessage(), e);
+    return buildResponse(request, HttpStatus.BAD_REQUEST,
+        "유효하지 않은 cafeId입니다");
+  }
 
   @ExceptionHandler(NoSuchElementException.class)
   public ResponseEntity<CustomErrorResponse> handleDataAccess(NoSuchElementException e,

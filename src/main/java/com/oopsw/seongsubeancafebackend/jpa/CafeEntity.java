@@ -14,6 +14,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+//제약 조건: null과 데이터 길이 제한
+
 @Entity
 @Table(name = "CAFE_INFO")
 @Data

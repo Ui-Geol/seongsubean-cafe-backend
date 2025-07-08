@@ -10,7 +10,7 @@ spring:
   #    username: mydbid
   #    password: mydbpw
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
     driverClassName: org.h2.Driver
     username: sa
     password:
