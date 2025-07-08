@@ -5,7 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.oopsw.seongsubeancafebackend.dto.CafeDTO;
-import java.util.NoSuchElementException;
+import com.oopsw.seongsubeancafebackend.exception.CafeCreationException;
+import com.oopsw.seongsubeancafebackend.exception.CafeNotFoundException;
+import com.oopsw.seongsubeancafebackend.exception.InvalidCafeIdException;
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -26,11 +29,14 @@ public class CafeServiceTests {
 
   @Autowired
   private CafeService cafeService;
+  @Autowired
+  private EntityManager entityManager;
 
   @Test
   @Order(1)
-  public void successCreateCafeTest() {
+  public void createCafe_ValidData_Success() {
 
+    //given
     CafeDTO cafeDTO = CafeDTO.builder()
         .email("owner@coffeehouse.com")
         .cafeName("발할라")
@@ -41,18 +47,46 @@ public class CafeServiceTests {
         .phoneNumber("02-1234-5678")
         .image("/images/cafes/Cafe1.png").build();
 
-    Long cafeId = cafeService.createCafe(cafeDTO);
+    //when
+    Long resultCafeId = cafeService.createCafe(cafeDTO);
 
-    Assertions.assertThat(cafeId).isEqualTo(1L);
+    //then
+    Assertions.assertThat(resultCafeId).isEqualTo(6L);
 
   }
 
   @Test
   @Order(2)
-  public void successGetCafeTest() {
+  public void createCafe_NullValue_CafeCreationException() {
 
-    CafeDTO resultCafeDTO = cafeService.getCafe(1L);
+    //given
+    String cafeName = null;
+    CafeDTO cafeDTO = CafeDTO.builder()
+        .email("owner@coffeehouse.com")
+        .cafeName(cafeName)
+        .zipCode("64406")
+        .cafeAddress("서울특별시 강남구 테헤란로 152")
+        .cafeDetailAddress("3층 301호")
+        .cafeIntroduction("조용하고 아늑한 카페입니다")
+        .phoneNumber("02-1234-5678")
+        .image("/images/cafes/Cafe1.png").build();
 
+    //when&then
+    assertThatThrownBy(() -> cafeService.createCafe(cafeDTO))
+        .isInstanceOf(CafeCreationException.class);
+
+  }
+
+  @Test
+  @Order(3)
+  public void getCafe_ExistingCafeId_Success() {
+    //given
+    Long existingCafeId = 1L;
+
+    //when
+    CafeDTO resultCafeDTO = cafeService.getCafe(existingCafeId);
+
+    //then
     assertAll(
         () -> assertThat(resultCafeDTO.getEmail()).isEqualTo("owner@bluemoon.com"),
         () -> assertThat(resultCafeDTO.getCafeName()).isEqualTo("블루문 카페"),
@@ -68,12 +102,97 @@ public class CafeServiceTests {
   }
 
   @Test
-  @Order(3)
-  public void failGetCafeTest() {
+  @Order(4)
+  public void getCafe_NonExistingCafeId_CafeNotFoundException() {
+    //given
+    Long nonExistingCafeId = 999L;
 
-    assertThatThrownBy(() -> cafeService.getCafe(8L))
-        .isInstanceOf(NoSuchElementException.class);
+    //when&then
+    assertThatThrownBy(() -> cafeService.getCafe(nonExistingCafeId))
+        .isInstanceOf(CafeNotFoundException.class);
+  }
+
+  @Test
+  @Order(5)
+  public void getCafe_NullCafeId_CafeNotFoundException() {
+    //given
+    Long nonExistingCafeId = null;
+
+    //when&then
+    assertThatThrownBy(() -> cafeService.getCafe(nonExistingCafeId))
+        .isInstanceOf(InvalidCafeIdException.class);
+  }
+
+  @Test
+  public void updateCafe_ExistingCafeId_ValidData_Success() {
+    //given
+    CafeDTO cafeDTO = CafeDTO.builder()
+        .cafeId(1L)
+        .email("owner@coffeehouse.com")
+        .cafeName("단단한 카페")
+        .zipCode("64406")
+        .cafeAddress("서울특별시 강남구 테헤란로 152")
+        .cafeDetailAddress("3층 301호")
+        .cafeIntroduction("조용하고 아늑한 카페입니다")
+        .phoneNumber("02-1234-5678")
+        .image("/images/cafes/Cafe1.png").build();
+
+    //when
+    Long resultCafeId = cafeService.updateCafe(cafeDTO);
+
+    //then
+    assertThat(resultCafeId).isEqualTo(1L);
+
+  }
+
+  @Test
+  public void updateCafe_NonExistingCafeId_CafeNotFoundException() {
+    //given
+    Long nonExistingCafeId = 999L;
+    CafeDTO cafeDTO = CafeDTO.builder()
+        .cafeId(nonExistingCafeId)
+        .email("owner@coffeehouse.com")
+        .cafeName("단단한 카페")
+        .zipCode("64406")
+        .cafeAddress("서울특별시 강남구 테헤란로 152")
+        .cafeDetailAddress("3층 301호")
+        .cafeIntroduction("조용하고 아늑한 카페입니다")
+        .phoneNumber("02-1234-5678")
+        .image("/images/cafes/Cafe1.png").build();
+
+    //when & then
+    assertThatThrownBy(() -> {
+      cafeService.updateCafe(cafeDTO);
+      entityManager.flush();
+    }).isInstanceOf(CafeNotFoundException.class);
+
   }
 
 
+  @Test
+  void getCafe_NullCafeId_InvalidCafeIdException() {
+    // when & then
+    assertThatThrownBy(() -> cafeService.getCafe(null))
+        .isInstanceOf(InvalidCafeIdException.class);
+  }
+
+  @Test
+  void getCafe_NegativeCafeId_InvalidCafeIdException() {
+    // given
+    Long negativeCafeId = -1L;
+
+    // when & then
+    assertThatThrownBy(() -> cafeService.getCafe(negativeCafeId))
+        .isInstanceOf(InvalidCafeIdException.class);
+  }
+
+  @Test
+  void getCafe_ZeroCafeId_InvalidCafeIdException() {
+    // given
+    Long zeroCafeId = 0L;
+
+    // when & then
+    assertThatThrownBy(() -> cafeService.getCafe(zeroCafeId))
+        .isInstanceOf(InvalidCafeIdException.class);
+  }
 }
