@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class CafeRequest {
-
     private Long cafeId;
     private String cafeName;
     private String cafeAddress;
