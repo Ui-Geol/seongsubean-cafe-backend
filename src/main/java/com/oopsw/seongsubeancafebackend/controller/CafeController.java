@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,6 +74,14 @@ public class CafeController {
     Long ResultCafeId = cafeService.updateCafe(cafeDTO);
 
     return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", ResultCafeId));
+  }
+
+  @DeleteMapping("/{cafeId}")
+  public ResponseEntity<Map<String, String>> deleteCafe(@PathVariable Long cafeId) {
+
+    cafeService.deleteCafe(cafeId);
+
+    return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "카페 삭제가 성공하였습니다"));
   }
 
 

@@ -2,6 +2,7 @@ package com.oopsw.seongsubeancafebackend.service;
 
 import com.oopsw.seongsubeancafebackend.dto.CafeDTO;
 import com.oopsw.seongsubeancafebackend.exception.CafeCreationException;
+import com.oopsw.seongsubeancafebackend.exception.CafeDeletionException;
 import com.oopsw.seongsubeancafebackend.exception.CafeNotFoundException;
 import com.oopsw.seongsubeancafebackend.exception.CafeUpdateException;
 import com.oopsw.seongsubeancafebackend.exception.InvalidCafeIdException;
@@ -82,6 +83,23 @@ public class cafeServiceImpl implements CafeService {
       return resultCafeEntity.getCafeId();
     } catch (Exception e) {
       throw new CafeUpdateException("카페 수정에 실패하였습니다");
+    }
+  }
+
+  @Override
+  public Boolean deleteCafe(Long cafeId) {
+
+    validateCafeId(cafeId);
+
+    if (!cafeRepository.existsById(cafeId)) {
+      throw new CafeDeletionException("카페 Id가 존재하지 않습니다");
+    }
+
+    try {
+      cafeRepository.deleteById(cafeId);
+      return true;
+    } catch (Exception e) {
+      throw new CafeDeletionException("카페 삭제를 실패하였습니다");
     }
   }
 

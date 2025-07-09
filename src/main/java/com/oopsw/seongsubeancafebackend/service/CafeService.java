@@ -11,4 +11,6 @@ public interface CafeService {
 
   Long updateCafe(CafeDTO cafeDTO);
 
+  Boolean deleteCafe(Long cafeId);
+
 }
