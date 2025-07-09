@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.oopsw.seongsubeancafebackend.dto.CafeDTO;
 import com.oopsw.seongsubeancafebackend.exception.CafeCreationException;
+import com.oopsw.seongsubeancafebackend.exception.CafeDeletionException;
 import com.oopsw.seongsubeancafebackend.exception.CafeNotFoundException;
 import com.oopsw.seongsubeancafebackend.exception.InvalidCafeIdException;
 import jakarta.persistence.EntityManager;
@@ -124,6 +125,7 @@ public class CafeServiceTests {
   }
 
   @Test
+  @Order(6)
   public void updateCafe_ExistingCafeId_ValidData_Success() {
     //given
     CafeDTO cafeDTO = CafeDTO.builder()
@@ -146,6 +148,7 @@ public class CafeServiceTests {
   }
 
   @Test
+  @Order(7)
   public void updateCafe_NonExistingCafeId_CafeNotFoundException() {
     //given
     Long nonExistingCafeId = 999L;
@@ -165,6 +168,33 @@ public class CafeServiceTests {
       cafeService.updateCafe(cafeDTO);
       entityManager.flush();
     }).isInstanceOf(CafeNotFoundException.class);
+
+  }
+
+  @Test
+  @Order(8)
+  public void deleteCafe_ExistingCafeId_Success() {
+    //given
+    Long existingCafeId = 1L;
+
+    //when
+    Boolean result = cafeService.deleteCafe(existingCafeId);
+
+    //then
+    assertThat(result).isTrue();
+
+  }
+
+  @Test
+  @Order(9)
+  public void deleteCafe_InvalidCafeId_CafeDeletionException() {
+    //given
+    Long nonExistingCafeId = 999L;
+
+    //when&then
+    assertThatThrownBy(() -> {
+      cafeService.deleteCafe(nonExistingCafeId);
+    }).isInstanceOf(CafeDeletionException.class);
 
   }
 

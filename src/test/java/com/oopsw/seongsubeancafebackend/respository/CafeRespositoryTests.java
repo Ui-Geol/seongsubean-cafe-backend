@@ -207,5 +207,28 @@ public class CafeRespositoryTests {
     }).isInstanceOf(DataIntegrityViolationException.class);
   }
 
+  @Test
+  @Order(9)
+  public void deleteCafe_ExistingCafeId_Success() {
+    //given
+    Long existingCafeId = 1L;
+
+    //when
+    cafeRepository.deleteById(existingCafeId);
+
+    //then
+    assertThat(cafeRepository.existsById(existingCafeId)).isFalse();
+  }
+
+  @Test
+  @Order(10)
+  public void deleteCafe_NonExistCafeId_Success() {
+    //given
+    Long existingCafeId = 999L;
+
+    //when
+    cafeRepository.deleteById(existingCafeId);
+  }
+
 
 }
