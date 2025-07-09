@@ -3,6 +3,7 @@ package com.oopsw.seongsubeancafebackend.service;
 import com.oopsw.seongsubeancafebackend.dto.CafeDTO;
 import com.oopsw.seongsubeancafebackend.jpa.CafeEntity;
 import com.oopsw.seongsubeancafebackend.jpa.CafeRepository;
+import java.time.LocalDateTime;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class CafeServiceImpl implements CafeService {
         existingEntity.setCafeAddress(cafeDTO.getCafeAddress());
         existingEntity.setPhoneNumber(cafeDTO.getPhoneNumber());
         existingEntity.setCafeIntroduction(cafeDTO.getCafeIntroduction());
+        existingEntity.setUpdatedAt(LocalDateTime.now());
         CafeEntity updated = cafeRepository.save(existingEntity);
         return new ModelMapper().map(updated, CafeDTO.class);
     }
